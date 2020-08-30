@@ -1,100 +1,136 @@
 package inlmn2;
 
 import java.lang.reflect.Array;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Inlmn2 {
-	
-	public enum Weapon {ROCK, PAPER, SCISSOR}
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		/* Variable declaration */
 		String player1 = "Player 1";
 		String player2 = "Player 2";
 		String choicePlayer1 = new String();
 		String choicePlayer2 = new String();
+		String[] fixedGameNames = {"Rock", "Paper", "Scissor"};
+		String[] gameNames = new String[3];
+		Scanner inputNumberOfPlayers = new Scanner(System.in);
+		int numberOfPlayers = 0;
+		
+		/*
+		 * Loop through an array with fixed names (Rock, Paper, Scissor) and give the user 
+		 * an input to name them something else.
+		 */
+		for(int i=0; i<gameNames.length; i++) {
+			
+			System.out.println("Choose a name for " + fixedGameNames[i] + " :");
+			gameNames[i] = new Scanner(System.in).nextLine();
+		}
+		
+		System.out.println("How many players? 1 (vs AI) or 2 (player vs player)");
+		
+		/*
+		 * Check to see that an integer was the correct input.
+		 */
+		try {
+			numberOfPlayers = inputNumberOfPlayers.nextInt();
+		} catch (Exception e){
+			System.out.println("Only numbers between 1 and 2 are permitted.");
+		}
 		
 		
-		choicePlayer1 = playerInput(player1);
-		choicePlayer2 = playerInput(player2);
+		/*
+		 * Check to see how many players. If two players then the input method is called twice otherwise it calls
+		 * the AI function. 
+		 */
+		if (numberOfPlayers == 2) {
+		
+			choicePlayer1 = playerInput(player1, gameNames);
+			choicePlayer2 = playerInput(player2, gameNames);
+			determineWinner(choicePlayer1, choicePlayer2, gameNames);
+		} else if (numberOfPlayers == 1) {
+			choicePlayer1 = playerInput(player1, gameNames);
+			choicePlayer2 = aiChoice(player2, gameNames);
+			determineWinner(choicePlayer1, choicePlayer2, gameNames);
+		}	
 		
 		
-		
-		determineWinner(choicePlayer1, choicePlayer2);
-		
-		
+		inputNumberOfPlayers.close();
 		
 	}
 	
-	public static String playerInput(String playerNo) {
+	/* 
+	 * Method to take input from the user and call other methods to check for correct inputs.
+	 * Takes a String and a String array as parameters. Returns a String.
+	 */
+	public static String playerInput(String playerNo, String[] names) {
 		
-		String gameChoices[] = {"Rock", "Paper", "Scissor"};
-		String[] lol = new String[3];
 		Scanner input = new Scanner(System.in);
 		boolean inputLoop = false;
 		String playerChoice = "";
 		
 		
-		
+		/* Loop while inputLoop is false, prints to Screen from a String array with three choices. Takes a string as input from the user.
+		 * The boolean is then "checked" against a method that takes the user input as a parameter.
+		 */
 		while(!inputLoop)  {
-			System.out.println(playerNo +" choose: " + gameChoices[0] + "(1) , " + gameChoices[1] + "(2) , " + gameChoices[2] + "(3)");
+			System.out.println(playerNo +" choose: " + names[0] + "(1) , " + names[1] + "(2) , " + names[2] + "(3)");
 			playerChoice = input.nextLine();
-			//playerChoice = checkInput(playerChoice);
-			inputLoop = checkInput(playerChoice);
-			
-			/*if (!playerChoice.equals("wrong")) {
-				inputLoop = false;
-			}*/
-		
+			inputLoop = checkInput(playerChoice, names);
 		}
 		
-		//input.close();
+		/* input.close(); 
+		 * This somehow bugged. Couldn't understand the reason for it. I thought that it would create a new Scanner object each time
+		 * the method is called but somehow it returns NULL after the first input. If I leave the scanner object open it works. 
+		 */
 		
-		return fixInput(playerChoice);
+		/* Send the input stream to a formatting method*/
+		return fixInput(playerChoice, names);
 		
 	}
 	
 	
-	
-	public static boolean checkInput(String s) {
+	/* Method that checks a String for correct input */
+	public static boolean checkInput(String s, String[] names) {
 		
 		boolean trueNameValue = false;
 		
-		
+		/* Set the string to all lowercase letters to make it easier to check */
 		String inputNormalized = s.toLowerCase();	
 		
-		
-		if (inputNormalized.equals("rock")  || inputNormalized.equals("paper")  || inputNormalized.equals("scissor")  ) {
+		/*
+		 * Check if the string is equal to the right letter options or numbers, if it's not it prints an error message
+		 * and sets the boolean to false.
+		 */
+		if (inputNormalized.equals(names[0])  || inputNormalized.equals(names[1])  || inputNormalized.equals(names[2])  ) {
 			trueNameValue = true;
 		} else if (inputNormalized.equals("1")  || inputNormalized.equals("2")  || inputNormalized.equals("3")) {
 			trueNameValue = true;
-			//s = fixInput(s);
 		} else {
-			//System.out.println("Wrong input, try again!");
+			System.out.println("Wrong input, try again!");
 			trueNameValue = false;
 		}
 		
 		
-		/*if (trueNameValue) {
-			return s;
-		} else {
-			s = "wrong";
-			return s;
-		}*/
-		
 		return trueNameValue;
 		
-		
+
 	}
 	
-	public static String fixInput(String choice) {
+	/* Method to "fix" the String if the user has input numbers instead of the word choice.
+	 */
+	public static String fixInput(String choice, String[] names) {
 		
+		/* Matches the number value to the correct choice 
+		 * 
+		 */
 		if (choice.equals("1")) {
-			choice = "rock";
+			choice = names[0];
 		} else if (choice.equals("2") ) {
-			choice = "paper";
+			choice = names[1];
 		} else if (choice.equals("3")) {
-			choice = "scissor";
+			choice = names[2];
 		} else {
 			choice = choice.toLowerCase();
 		}
@@ -103,28 +139,43 @@ public class Inlmn2 {
 			
 	}
 	
-	public static void determineWinner(String s1, String s2) {
+	/*
+	 * Method to determine the winner. Compares two Strings to each other.
+	 */
+	public static void determineWinner(String s1, String s2, String[] names) {
 		
 		int winner = 0;
 		
+		/*
+		 * Check if the two Strings are the same.
+		 */
 		if (s1.equals(s2) ) {
 			winner = 3;
-		} else if (s1.equals("rock") ) {
-			if (s2.equals("paper")) {
+		/*
+		 * Check if the first String is rock and then compare it to the other String with both of the remaining value it can have.
+		 */
+		} else if (s1.equals(names[0]) ) {
+			if (s2.equals(names[1])) {
 				winner = 2;
-			} else if (s2.equals("scissor")) {
+			} else if (s2.equals(names[2])) {
 				winner = 1;
-			}			
-		} else if (s1.equals("paper")) {
-			if (s2.equals("rock"))  {
+			}
+		/*
+		 * Check if the first String is paper and then compare it to the other String with both of the remaining value it can have.
+		 */
+		} else if (s1.equals(names[1])) {
+			if (s2.equals(names[0]))  {
 				winner = 1;
-			} else if (s2.equals("scissor")) {
+			} else if (s2.equals(names[2])) {
 				winner = 2;
 			}
-		} else if (s1.equals("scissor")) {
-			if (s2.equals("rock")) {
+		/*
+		 * Check if the first String is paper and then compare it to the other String with both of the remaining value it can have.
+		 */
+		} else if (s1.equals(names[2])) {
+			if (s2.equals(names[0])) {
 				winner = 2;
-			} else if (s2.equals("paper")) {
+			} else if (s2.equals(names[1])) {
 				winner = 1;
 			}
 		}
@@ -133,6 +184,10 @@ public class Inlmn2 {
 		
 	}
 	
+	/* 
+	 * Method to interpret the winner and print it out on screen.
+	 * Takes an int as parameter.
+	 */
 	public static void winnerOutput(int winner) {
 		
 		switch (winner) {
@@ -148,8 +203,20 @@ public class Inlmn2 {
 		}
 	}
 	
-	
-	
+	/*
+	 * Method that takes a String as parameter and randomises a number between 1 and 3 and returns that number
+	 * as a String.
+	 */
+	public static String aiChoice(String s, String[] names) {
+		
+		Random rand = new Random();
+		Integer randomNumber;
+		
+		randomNumber = rand.nextInt(2)+1;
+		s = randomNumber.toString();
+
+		return fixInput(s, names);
+	}
 	
 
 }
