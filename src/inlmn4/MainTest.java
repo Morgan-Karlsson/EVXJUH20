@@ -28,6 +28,8 @@ public static String COMMA_DELIMITER = ",";
 			
 		}
 		
+		
+		
 
 	}
 
@@ -39,6 +41,18 @@ public static String COMMA_DELIMITER = ",";
 				values.add(rowScanner.next());
 			}
 		}
+		
+		int count = 0;
+		
+		for(int i=0; i<values.size(); i++) {
+			
+			
+			if(values.get(1).contains("a") || values.get(2).contains("a")) 
+				count++;
+		}
+		 
+		System.out.println(count-2);
+		
 		
 		return values;
 	}

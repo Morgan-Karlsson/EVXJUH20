@@ -1,6 +1,5 @@
 package inlmn2;
 
-import java.lang.reflect.Array;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -80,11 +79,8 @@ public class Inlmn2 {
 			inputLoop = checkInput(playerChoice, names);
 		}
 		
-		/* input.close(); 
-		 * This somehow bugged. Couldn't understand the reason for it. I thought that it would create a new Scanner object each time
-		 * the method is called but somehow it returns NULL after the first input. If I leave the scanner object open it works. 
-		 */
-		
+		input.reset(); 
+	
 		/* Send the input stream to a formatting method*/
 		return fixInput(playerChoice, names);
 		
