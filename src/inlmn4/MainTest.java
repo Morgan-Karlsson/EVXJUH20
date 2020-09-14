@@ -3,6 +3,9 @@ package inlmn4;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
 
@@ -37,6 +40,8 @@ public static String COMMA_DELIMITER = ",";
 		System.out.println("Det finns " + countLetters + " personer med bokstaven a i sitt namn");
 		System.out.println("Det finns " + countWorks + " personer som skall jobba med Android");
 		sameTime(records);
+		
+		//testMail(records);
 
 	}
 
@@ -122,6 +127,47 @@ public static String COMMA_DELIMITER = ",";
 		
 	}
 	
+	
+	/*
+	 * Had a go at the bonus task but didnt quite understand it
+	 */
+	private static void testMail(List<List<String>> l) {
+		
+		List<String> names = new ArrayList<>();
+		List<String> mail = new ArrayList<>();
+		
+		
+		for(int i=1; i<l.size()-1; i++) {
+			
+			if((!l.get(i).get(1).equals("") || !l.get(i).get(1).equals("")) && 
+				!l.get(i).get(3).contains("Email adress")) {
+				names.add(l.get(i).get(1)); 
+				names.add(l.get(i).get(2));
+				mail.add(l.get(i).get(3));
+				mail.add(l.get(i).get(4));
+				
+			}
+			
+		}
+		
+		names.sort(Comparator.naturalOrder());
+		//mail.sort(Comparator.naturalOrder());
+		Collections.sort(mail);
+		
+		names.addAll(mail);
+		
+		for(String b:names) {
+			System.out.println(b);
+		}
+		
+		
+		
+		
+	}
+		
+		
+		
+		
 	
 	
 	
