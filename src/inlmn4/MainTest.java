@@ -13,7 +13,8 @@ public static String COMMA_DELIMITER = ",";
 
 	public static void main(String[] args) {
 		
-		int count = 0;
+		int countLetters = 0;
+		int countWorks = 0;
 
 		List<List<String>> records = new ArrayList<>();
 		try (Scanner scanner = new Scanner(new File("sample.csv"));) {
@@ -27,13 +28,14 @@ public static String COMMA_DELIMITER = ",";
 		
 		for(List<String> b:records){ 
 			System.out.println(b);
-			count += countLetters("a", b);
+			countLetters += countLetters("a", b);
+			countWorks += androidApp(b, "android");
 			
 		}
 		
 		
-		System.out.println("Det finns " + count + " personer med bokstaven a i sitt namn");
-		
+		System.out.println("Det finns " + countLetters + " personer med bokstaven a i sitt namn");
+		System.out.println("Det finns " + countWorks + " personer som skall jobba med Android");
 		sameTime(records);
 
 	}
@@ -78,7 +80,7 @@ public static String COMMA_DELIMITER = ",";
 		return count;
 	}
 	
-	private static void sameTime(List<List<String>> l) {
+	private static void sameTime(List<List<String>> list) {
 		
 		String names = new String();
 		
@@ -88,11 +90,11 @@ public static String COMMA_DELIMITER = ",";
 		 * Then checks in the Timestamp column if the value matches any other value in that column. Builds a string that it then prints with the names corresponding
 		 * to the timestamp.
 		 */
-		for(int i=0; i<l.size(); i++) {
-			for(int j=l.size()-1; j>i; j--) {
-				if (l.get(i).get(0).equals(l.get(j).get(0)) && !l.get(i).get(0).equals(""))  {
-					names = l.get(i).get(1) + " " + l.get(i).get(2) + " & " + l.get(j).get(1) + " " + l.get(j).get(2);
-					System.out.println(names);	
+		for(int i=0; i<list.size(); i++) {
+			for(int j=list.size()-1; j>i; j--) {
+				if (list.get(i).get(0).equals(list.get(j).get(0)) && !list.get(i).get(0).equals(""))  {
+					names = list.get(i).get(1) + " " + list.get(i).get(2) + " & " + list.get(j).get(1) + " " + list.get(j).get(2);
+					System.out.println("Dessa personer har samma timetable: " + names);	
 				}
 				
 			}
@@ -100,4 +102,27 @@ public static String COMMA_DELIMITER = ",";
 		}
 		
 	}
+	
+	/*
+	 * Function to check 7th cell  for what they will be working on
+	 */
+	private static int androidApp(List<String> list, String phrase) {
+		
+		int counter = 0;
+		
+		/*
+		 * Check if the cell value contains the string value
+		 * Adds 2 to the counter since they're two groups.
+		 */
+		if(list.get(6).toLowerCase().contains(phrase)) {
+			counter += 2;
+		}
+		
+		return counter;
+		
+	}
+	
+	
+	
+	
 }
